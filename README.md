@@ -20,4 +20,5 @@ To run this app locally, follow these steps:
 ```sh
 git clone https://github.com/Someleze1412/flag-explorer.git
 cd flag-explorer
+npm install
 npm run dev
