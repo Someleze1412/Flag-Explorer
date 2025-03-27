@@ -1,92 +1,38 @@
-name: CI/CD Pipeline
-
-on:
-  push:
-    branches:
-      - main  # Runs the pipeline on every push to the 'main' branch.
-  pull_request:
-    branches:
-      - main  # Runs the pipeline on pull requests to 'main'.
-
 jobs:
-  # Frontend Job: Build and Test Frontend (Vite app)
   frontend:
     runs-on: ubuntu-latest
-
     steps:
-      # Checkout code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'  # Specify the Node version you want to use
+          node-version: '16'
 
-      # Install dependencies
-      - name: Install dependencies
-        run: npm install
+      - name: Install frontend dependencies
+        run: |
+          cd frontend  # Navigate to the frontend folder (if needed)
+          npm install
 
-      # Run frontend tests (if you have tests set up)
-      - name: Run frontend tests
-        run: npm run test -- --watch=false
-
-      # Build the frontend
-      - name: Build frontend
+      - name: Build the frontend
         run: npm run build
 
-      # Optionally, deploy to Netlify (if deploying frontend directly)
-      - name: Deploy to Netlify
-        run: |
-          curl -sL https://github.com/netlify/cli/releases/download/v3.16.1/netlify-cli-linux-x64.tar.gz | tar xz
-          ./netlify deploy --prod --dir=dist  # Customize deployment command
-
-  # Backend Job: Build and Test Backend (Express API)
   backend:
     runs-on: ubuntu-latest
-
     steps:
-      # Checkout code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up Node.js environment for backend
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'  # Specify the Node version you want to use
+          node-version: '16'
 
-      # Install backend dependencies
       - name: Install backend dependencies
-        run: npm install
-
-      # Run backend tests (if you have tests set up)
-      - name: Run backend tests
-        run: npm run test  # Customize this if you have backend test scripts
-
-      # Build the backend (if applicable)
-      - name: Build backend
-        run: npm run build  # If you have a build step for your backend
-
-      # Package backend (you can create a zip file for deployment)
-      - name: Package backend
-        run: zip -r backend.zip .  # Custom command to package backend (e.g., create a zip)
-
-  # Deployment (Optional, if you are deploying both frontend and backend here)
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [frontend, backend]  # Make sure frontend and backend jobs are done before deploy
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      # Deploy backend to a service like Heroku or any hosting platform
-      - name: Deploy backend to Heroku
         run: |
-          heroku login --api-key ${{secrets.HEROKU_API_KEY}}  # Set your Heroku API key in GitHub secrets
-          git remote add heroku https://git.heroku.com/your-app.git
-          git push heroku main
+          cd backend  # Navigate to the backend folder
+          npm install
 
-      # Deploy frontend to Netlify (already set up in the frontend job)
+      - name: Build the backend
+        run: npm run build
