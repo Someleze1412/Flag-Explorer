@@ -16,7 +16,8 @@ Users can **search**, **sort** alphabetically, and **click on flags** to reveal 
 ##  Installation & Setup
 To run this app locally, follow these steps:
 
-### **1️⃣ Clone the Repository**
+### ** Clone the Repository**
 ```sh
 git clone https://github.com/Someleze1412/flag-explorer.git
 cd flag-explorer
+npm run dev
